@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rest tester</title>
+    <style>
+        main{
+            display:grid;
+            align-items: left;
+            justify-items: left;
+        }
+        #submit{
+            margin-top:1em;
+        }
+        #urifield{
+            width: 25em;
+        }
+        h2{
+            font-size: small;
+        }
+    </style>
+    <script>
+        'use strict';
+
+            (function () {
+                let method = 'GET';
+                let urifield;
+                let jsonarea;
+                let messagearea;
+
+                document.addEventListener('DOMContentLoaded', init);
+
+                function init() {
+                    urifield = document.getElementById('urifield');
+                    jsonarea = document.getElementById('jsonarea');
+                    messagearea = document.getElementById('messagearea');
+
+                    document.getElementById('submit').addEventListener('click', send);
+                    document.getElementById('methods').addEventListener('change', choose);
+
+                    clearSelections();
+                    urifield.value = 'http://localhost:4000/api/';
+                }
+
+                function clearSelections() {
+                    messagearea.textContent = '';
+                    method = 'GET';
+                    document.getElementById('get').checked = true;
+                }
+
+                function choose(e) {
+                    messagearea.textContent = '';
+                    method = e.target.value;
+                }
+
+                async function send() {
+                    const options = {
+                        method: method,
+                        mode: 'cors'
+                    };
+
+                    if (method === 'PUT' || method === 'POST') {
+                        options.body = jsonarea.value;
+                        options.headers = { 'Content-Type': 'application/json' }
+                    }
+
+                    try {
+                        const result = await fetch(urifield.value, options);
+                        const data = await result.json();
+
+                        showMessage(data);
+                    }
+                    catch (error) {
+                        showMessage({ type: 'error', message: error.message });
+                    }
+                }
+
+                function showMessage(data) {
+                    messagearea.textContent = JSON.stringify(data, null, 4);
+                }
+
+
+            })()
+    </script>
+</head>
+<body>
+    <main>
+        <h1>REST tester</h1>
+        <p id="uri"><label>Resource URI: <input type="text" id="urifield"></label></p>
+        <fieldset id="methods">
+            <legend>Choose:</legend>
+            <label><input type="radio" name="method" value="GET" id="get">GET</label>
+            <label><input type="radio" name="method" value="POST">POST</label>
+            <label><input type="radio" name="method" value="PUT">PUT</label>
+            <label><input type="radio" name="method" value="DELETE">DELETE</label>
+        </fieldset>
+        <h2>JSON</h2>
+        <div>
+            <textarea id="jsonarea" cols="50" rows="10"></textarea>
+        </div>
+        <button id="submit">Submit</button>
+        <h2>Result</h2>
+        <pre id="messagearea"></pre>
+    </main>
+</body>
+</html>

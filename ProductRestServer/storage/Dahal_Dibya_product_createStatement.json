@@ -1,0 +1,27 @@
+{
+    "host":"127.0.0.1",
+    "port":3306,
+    "admin":"admin",
+    "user":"daniel",
+    "userpassword":"ZCKR54YP",
+    "dropUser":true,
+    "debug":true,
+    "database":"productdb",
+    "allowPublicKeyRetrieval": true,
+    "tables":[
+        {
+            "tableName":"product",
+            "columns":[
+                "productId integer",
+                "name varchar(17)",
+                "model integer",
+                "amount integer",
+                "price integer"
+            ],
+            "data":[
+                [1,"Apple",1,50,100],
+                [2, "Mango", 1,6, 25]
+            ]
+        }
+    ]
+}
